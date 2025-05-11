@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.auth.FirebaseAuth
 import com.idris.MyFinance.R
 import com.idris.MyFinance.navigation.ROUTE_LOGIN
@@ -31,8 +32,19 @@ fun UserProfileScreen(navController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
 
-    // Default profile picture (if Firebase user doesn't have a photoUrl)
-    val defaultProfilePic = painterResource(id = R.drawable.img_1)
+    // If user is null, redirect to login
+    if (user == null) {
+        Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
+        navController.navigate(ROUTE_LOGIN) { popUpTo(0) }
+        return
+    }
+
+    val profilePictureUrl = user.photoUrl?.toString()
+    val profilePainter = if (!profilePictureUrl.isNullOrEmpty()) {
+        rememberAsyncImagePainter(profilePictureUrl)
+    } else {
+        painterResource(id = R.drawable.img_1)
+    }
 
     Box(
         modifier = Modifier
@@ -64,10 +76,8 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Show profile picture from Firebase (or default image if none available)
-            val profilePicture = user?.photoUrl?.toString() ?: ""
             Image(
-                painter = rememberImagePainter(if (profilePicture.isEmpty()) defaultProfilePic else profilePicture),
+                painter = profilePainter,
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(120.dp)
@@ -77,7 +87,7 @@ fun UserProfileScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Email: ${user?.email ?: "Not available"}",
+                text = "Email: ${user.email ?: "Not available"}",
                 color = Color.DarkGray,
                 fontSize = 18.sp
             )
@@ -87,7 +97,7 @@ fun UserProfileScreen(navController: NavHostController) {
             // Edit Profile Button
             Button(
                 onClick = {
-                    navController.navigate(ROUTE_EDIT_PROFILE) // Navigate to the Edit Profile screen
+                    navController.navigate(ROUTE_EDIT_PROFILE)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                 shape = RoundedCornerShape(12.dp),
@@ -103,7 +113,7 @@ fun UserProfileScreen(navController: NavHostController) {
             // Change Password Button
             Button(
                 onClick = {
-                    user?.email?.let { email ->
+                    user.email?.let { email ->
                         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                         Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
                     }
@@ -134,6 +144,22 @@ fun UserProfileScreen(navController: NavHostController) {
                     .height(50.dp)
             ) {
                 Text("Logout", color = Color.White, fontSize = 16.sp)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Back Button
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF757575)),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text("Back", color = Color.White, fontSize = 16.sp)
             }
         }
     }

@@ -18,7 +18,7 @@ import com.idris.MyFinance.ui.theme.screens.LoginScreen.LoginScreen
 import com.idris.MyFinance.ui.theme.screens.SplashScreen.SplashScreen
 import com.idris.MyFinance.ui.theme.screens.UserProfileScreen.UserProfileScreen
 import com.idris.MyFinance.ui.theme.screens.SignUpScreen.SignUpScreen
-import com.idris.myfinance.ui.theme.screens.EditProfile.EditProfileScreen
+import com.idris.MyFinance.ui.theme.screens.EditProfileScreen.EditProfileScreen
 
 
 @Composable
