@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "19512325507",
+    "project_id": "myfinance-9767b",
+    "storage_bucket": "myfinance-9767b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19512325507:android:5d9abfbddaf3dfd30e32b6",
+        "android_client_info": {
+          "package_name": "com.idris.MyFinance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdtbbkabm3AHy2v2aLzdUXT8V_fIcru2A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

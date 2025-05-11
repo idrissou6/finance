@@ -6,16 +6,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 
 }
 
 android {
-    namespace = "com.idris.myfinance"
+    namespace = "com.idris.MyFinance"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.idris.myfinance"
-        minSdk = 21
+        applicationId = "com.idris.MyFinance"
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,9 +53,12 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
+    implementation("io.coil-kt:coil-compose:2.1.0")
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
