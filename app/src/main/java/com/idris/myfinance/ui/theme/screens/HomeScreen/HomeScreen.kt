@@ -41,7 +41,7 @@ fun HomeScreen(navController: NavHostController) {
                 .fillMaxSize()
                 .background(Brush.verticalGradient(listOf(Color(0x99000000), Color(0xCC000000)))))
 
-        // 🔹 Profile Icon (Top-Right)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

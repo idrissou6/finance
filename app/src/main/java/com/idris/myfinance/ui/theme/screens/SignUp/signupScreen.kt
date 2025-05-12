@@ -1,6 +1,7 @@
 package com.idris.MyFinance.ui.theme.screens.SignUpScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
@@ -26,21 +27,21 @@ fun SignUpScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
-    // Handle signup
+
     fun handleSignUp() {
-        // Check if the email is a Gmail address
+
         if (!email.endsWith("@gmail.com")) {
             errorMessage = "Please use a valid Gmail address"
             return
         }
 
-        // Check if the password and confirm password match
+
         if (password != confirmPassword) {
             errorMessage = "Passwords do not match"
             return
         }
 
-        // Check if password is strong enough
+
         if (password.length < 6) {
             errorMessage = "Password should be at least 6 characters"
             return
@@ -53,7 +54,7 @@ fun SignUpScreen(navController: NavHostController) {
                     user?.sendEmailVerification()
                         ?.addOnCompleteListener {
                             if (it.isSuccessful) {
-                                // Email verification sent successfully
+
                                 Toast.makeText(context, "Verification email sent", Toast.LENGTH_SHORT).show()
                                 navController.navigate(ROUTE_LOGIN)
                             } else {
@@ -61,7 +62,7 @@ fun SignUpScreen(navController: NavHostController) {
                             }
                         }
                 } else {
-                    // Display signup error
+
                     errorMessage = task.exception?.localizedMessage ?: "Signup failed. Please try again."
                 }
             }
@@ -70,6 +71,7 @@ fun SignUpScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFF512DA8))
             .padding(16.dp)
     ) {
         Column(
@@ -79,7 +81,7 @@ fun SignUpScreen(navController: NavHostController) {
         ) {
             Text(text = "Sign Up", fontSize = 24.sp)
 
-            // Email TextField
+
             BasicTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -95,7 +97,7 @@ fun SignUpScreen(navController: NavHostController) {
                 }
             )
 
-            // Password TextField
+
             BasicTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -111,7 +113,7 @@ fun SignUpScreen(navController: NavHostController) {
                 }
             )
 
-            // Confirm Password TextField
+
             BasicTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
@@ -127,7 +129,7 @@ fun SignUpScreen(navController: NavHostController) {
                 }
             )
 
-            // Sign Up Button
+
             Button(
                 onClick = { handleSignUp() },
                 modifier = Modifier.fillMaxWidth().height(48.dp)
@@ -135,7 +137,7 @@ fun SignUpScreen(navController: NavHostController) {
                 Text("Sign Up", color = Color.White)
             }
 
-            // Error Message
+
             if (errorMessage.isNotEmpty()) {
                 Text(
                     text = errorMessage,
@@ -147,7 +149,7 @@ fun SignUpScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Login Link
+
             TextButton(onClick = { navController.navigate(ROUTE_LOGIN) }) {
                 Text("Already have an account? Login")
             }

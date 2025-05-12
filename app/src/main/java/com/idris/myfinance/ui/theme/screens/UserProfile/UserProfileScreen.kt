@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +31,6 @@ fun UserProfileScreen(navController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
 
-    // If user is null, redirect to login
     if (user == null) {
         Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
         navController.navigate(ROUTE_LOGIN) { popUpTo(0) }
@@ -45,6 +43,8 @@ fun UserProfileScreen(navController: NavHostController) {
     } else {
         painterResource(id = R.drawable.img_1)
     }
+
+    val displayName = user.displayName ?: "No name set"  // Fetch the display name or default to "No name set"
 
     Box(
         modifier = Modifier
@@ -86,6 +86,16 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Display the user's display name
+            Text(
+                text = "Name: $displayName",
+                color = Color.DarkGray,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Display email (if available)
             Text(
                 text = "Email: ${user.email ?: "Not available"}",
                 color = Color.DarkGray,
@@ -94,7 +104,6 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Edit Profile Button
             Button(
                 onClick = {
                     navController.navigate(ROUTE_EDIT_PROFILE)
@@ -110,7 +119,6 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Change Password Button
             Button(
                 onClick = {
                     user.email?.let { email ->
@@ -129,7 +137,6 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Logout Button
             Button(
                 onClick = {
                     FirebaseAuth.getInstance().signOut()
@@ -148,7 +155,6 @@ fun UserProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Back Button
             Button(
                 onClick = {
                     navController.popBackStack()

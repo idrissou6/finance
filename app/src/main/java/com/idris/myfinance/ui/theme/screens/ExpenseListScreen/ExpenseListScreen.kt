@@ -63,7 +63,7 @@ fun ExpenseListScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF512DA8))  // Updated background color
+            .background(Color(0xFF512DA8))
     ) {
         Column(
             modifier = Modifier

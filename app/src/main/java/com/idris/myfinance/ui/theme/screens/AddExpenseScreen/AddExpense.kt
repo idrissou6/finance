@@ -52,7 +52,7 @@ fun AddExpenseScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF512DA8), Color(0xFF673AB7))  // Same gradient as LoginScreen
+                    listOf(Color(0xFF512DA8), Color(0xFF673AB7))
                 )
             )
     ) {

@@ -12,13 +12,13 @@ import com.idris.MyFinance.ui.theme.screens.HomeScreen.HomeScreen
 import com.idris.MyFinance.ui.theme.screens.AboutScreen.AboutScreen
 import com.idris.MyFinance.ui.theme.screens.AddExpenseScreen.AddExpenseScreen
 import com.idris.MyFinance.ui.theme.screens.BudgetOverviewScreen.BudgetOverviewScreen
+import com.idris.MyFinance.ui.theme.screens.EditProfileScreen.EditProfileScreen
 import com.idris.MyFinance.ui.theme.screens.ExpenseListScreen.ExpenseListScreen
 import com.idris.MyFinance.ui.theme.screens.IncomeScreen.IncomeScreen
 import com.idris.MyFinance.ui.theme.screens.LoginScreen.LoginScreen
+import com.idris.MyFinance.ui.theme.screens.SignUpScreen.SignUpScreen
 import com.idris.MyFinance.ui.theme.screens.SplashScreen.SplashScreen
 import com.idris.MyFinance.ui.theme.screens.UserProfileScreen.UserProfileScreen
-import com.idris.MyFinance.ui.theme.screens.SignUpScreen.SignUpScreen
-import com.idris.MyFinance.ui.theme.screens.EditProfileScreen.EditProfileScreen
 
 
 @Composable

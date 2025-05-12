@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.ktx.auth
@@ -67,7 +66,7 @@ fun BudgetOverviewScreen(navController: NavHostController) {
     val remainingBalance = totalIncome - totalExpenses
     val progress = if (totalIncome > 0) (totalExpenses / totalIncome).toFloat() else 0f
 
-    // Show notification if spending exceeds 80% of income
+
     LaunchedEffect(progress) {
         if (progress > 0.8f) {
             showBudgetNotification(
