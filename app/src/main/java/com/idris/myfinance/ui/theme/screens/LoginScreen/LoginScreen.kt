@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,14 +34,11 @@ fun LoginScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
-
     fun handleLogin() {
-
         if (!email.contains("@")) {
             errorMessage = "Please enter a valid email"
             return
         }
-
 
         if (password.isEmpty()) {
             errorMessage = "Please enter your password"
@@ -47,12 +48,10 @@ fun LoginScreen(navController: NavHostController) {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
                     navController.navigate(ROUTE_HOME) {
                         popUpTo(0) { inclusive = true }
                     }
                 } else {
-
                     errorMessage = task.exception?.localizedMessage ?: "Login failed. Please try again."
                 }
             }
@@ -77,40 +76,36 @@ fun LoginScreen(navController: NavHostController) {
                     .padding(bottom = 16.dp)
             )
 
-            Text(text = "Login", fontSize = 24.sp)
+            Text(text = "Login", fontSize = 24.sp, color = Color.White)
 
-
-            BasicTextField(
+            TextField(
                 value = email,
                 onValueChange = { email = it },
+                label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        if (email.isEmpty()) {
-                            Text("Enter your email", fontSize = 18.sp, color = Color.Gray)
-                        }
-                        innerTextField()
-                    }
-                }
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { /* focus to next field */ }
+                ),
+                isError = errorMessage.isNotEmpty()
             )
 
-
-            BasicTextField(
+            TextField(
                 value = password,
                 onValueChange = { password = it },
+                label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        if (password.isEmpty()) {
-                            Text("Enter your password", fontSize = 18.sp, color = Color.Gray)
-                        }
-                        innerTextField()
-                    }
-                }
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { handleLogin() }
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                isError = errorMessage.isNotEmpty()
             )
-
 
             Button(
                 onClick = { handleLogin() },
@@ -118,7 +113,6 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 Text("Login", color = Color.White)
             }
-
 
             if (errorMessage.isNotEmpty()) {
                 Text(
@@ -131,9 +125,8 @@ fun LoginScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             TextButton(onClick = { navController.navigate(ROUTE_SIGNUP) }) {
-                Text("Don't have an account? Sign up")
+                Text("Don't have an account? Sign up", color = Color.White)
             }
         }
     }

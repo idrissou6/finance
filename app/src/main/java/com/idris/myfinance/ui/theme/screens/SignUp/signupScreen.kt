@@ -4,12 +4,16 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,20 +31,16 @@ fun SignUpScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
-
     fun handleSignUp() {
-
         if (!email.endsWith("@gmail.com")) {
             errorMessage = "Please use a valid Gmail address"
             return
         }
 
-
         if (password != confirmPassword) {
             errorMessage = "Passwords do not match"
             return
         }
-
 
         if (password.length < 6) {
             errorMessage = "Password should be at least 6 characters"
@@ -54,7 +54,6 @@ fun SignUpScreen(navController: NavHostController) {
                     user?.sendEmailVerification()
                         ?.addOnCompleteListener {
                             if (it.isSuccessful) {
-
                                 Toast.makeText(context, "Verification email sent", Toast.LENGTH_SHORT).show()
                                 navController.navigate(ROUTE_LOGIN)
                             } else {
@@ -62,7 +61,6 @@ fun SignUpScreen(navController: NavHostController) {
                             }
                         }
                 } else {
-
                     errorMessage = task.exception?.localizedMessage ?: "Signup failed. Please try again."
                 }
             }
@@ -79,56 +77,51 @@ fun SignUpScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(text = "Sign Up", fontSize = 24.sp)
+            Text(text = "Sign Up", fontSize = 24.sp, color = Color.White)
 
-
-            BasicTextField(
+            TextField(
                 value = email,
                 onValueChange = { email = it },
+                label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        if (email.isEmpty()) {
-                            Text("Enter your Gmail", fontSize = 18.sp, color = Color.Gray)
-                        }
-                        innerTextField()
-                    }
-                }
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { /* focus to next field */ }
+                ),
+                isError = errorMessage.isNotEmpty()
             )
 
-
-            BasicTextField(
+            TextField(
                 value = password,
                 onValueChange = { password = it },
+                label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        if (password.isEmpty()) {
-                            Text("Enter your password", fontSize = 18.sp, color = Color.Gray)
-                        }
-                        innerTextField()
-                    }
-                }
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { /* focus to next field */ }
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                isError = errorMessage.isNotEmpty()
             )
 
-
-            BasicTextField(
+            TextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
+                label = { Text("Confirm Password") },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        if (confirmPassword.isEmpty()) {
-                            Text("Confirm your password", fontSize = 18.sp, color = Color.Gray)
-                        }
-                        innerTextField()
-                    }
-                }
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { handleSignUp() }
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                isError = errorMessage.isNotEmpty()
             )
-
 
             Button(
                 onClick = { handleSignUp() },
@@ -136,7 +129,6 @@ fun SignUpScreen(navController: NavHostController) {
             ) {
                 Text("Sign Up", color = Color.White)
             }
-
 
             if (errorMessage.isNotEmpty()) {
                 Text(
@@ -149,9 +141,8 @@ fun SignUpScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             TextButton(onClick = { navController.navigate(ROUTE_LOGIN) }) {
-                Text("Already have an account? Login")
+                Text("Already have an account? Login", color = Color.White)
             }
         }
     }

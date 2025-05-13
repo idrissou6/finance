@@ -1,5 +1,6 @@
 package com.idris.MyFinance.ui.theme.screens.ExpenseListScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,12 +9,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,40 +47,57 @@ fun ExpenseListScreen(navController: NavHostController) {
     val db = Firebase.firestore
     val uid = Firebase.auth.currentUser?.uid
 
+    // Handle case when user is not logged in
+    if (uid == null) {
+        Toast.makeText(navController.context, "User not logged in", Toast.LENGTH_SHORT).show()
+        navController.navigate(ROUTE_HOME) // Redirect to home if not logged in
+        return
+    }
+
     LaunchedEffect(Unit) {
-        if (uid != null) {
-            db.collection("expenses")
-                .whereEqualTo("uid", uid)
-                .get()
-                .addOnSuccessListener { result ->
-                    expenses.clear()
-                    for (document in result) {
-                        val expense = document.toObject(Expense::class.java)
-                        if (expense.category.lowercase() != "income") {
-                            expenses.add(expense)
-                        }
+        // Firebase query to fetch expenses
+        db.collection("expenses")
+            .whereEqualTo("uid", uid)
+            .get()
+            .addOnSuccessListener { result ->
+                expenses.clear()
+                for (document in result) {
+                    val expense = document.toObject(Expense::class.java)
+                    // Add valid expenses to the list
+                    if (expense.category.lowercase() != "income") {
+                        expenses.add(expense)
                     }
                 }
-        }
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure in fetching data
+                Toast.makeText(navController.context, "Error fetching data: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF512DA8))
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFFEDE7F6), Color(0xFFF3E5F5)) // Light pastel gradient
+                )
+            )
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 32.dp) // Spacing at the top
         ) {
             HeaderSection()
 
+            // Display list of expenses
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(expenses) { expense ->
                     ExpenseCard(expense)
@@ -85,6 +106,7 @@ fun ExpenseListScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Button with icon and text
             ExtendedFloatingActionButton(
                 text = { Text("Add Expense") },
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
@@ -133,25 +155,36 @@ fun ExpenseCard(expense: Expense) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(8.dp, RoundedCornerShape(16.dp)),
+            .shadow(12.dp, RoundedCornerShape(16.dp)) // Elevated shadow effect
+            .clip(RoundedCornerShape(16.dp)), // Rounded corners
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(12.dp),
+        elevation = CardDefaults.cardElevation(8.dp), // Subtle elevation
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(Modifier.padding(16.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
-                Modifier
+                modifier = Modifier
                     .width(6.dp)
                     .fillMaxHeight()
                     .background(getCategoryColor(expense.category))
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
             Column {
-                Text("Used for: ${expense.name}", fontWeight = FontWeight.Bold)
-                Text("Category: ${expense.category}", color = Color.Gray)
-                Text("Amount: ${expense.amount}", color = MaterialTheme.colorScheme.secondary)
-                Text("Date: ${expense.date}", color = Color.Gray)
+                Text(
+                    text = "Used for: ${expense.name}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                Text("Category: ${expense.category}", color = Color.Gray, fontSize = 14.sp)
+                Text("Amount: KES ${expense.amount}", color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp)
+                Text("Date: ${expense.date}", color = Color.Gray, fontSize = 14.sp)
             }
         }
     }
@@ -160,25 +193,31 @@ fun ExpenseCard(expense: Expense) {
 @Composable
 fun getCategoryColor(category: String): Color {
     return when (category.lowercase()) {
-        "food" -> Color(0xFFFF7043)
-        "transport" -> Color(0xFF29B6F6)
-        "utilities" -> Color(0xFFAB47BC)
-        "income" -> Color(0xFF66BB6A)
-        else -> Color.LightGray
+        "food" -> Color(0xFFFF7043) // Food category color
+        "transport" -> Color(0xFF29B6F6) // Transport category color
+        "utilities" -> Color(0xFFAB47BC) // Utilities category color
+        "income" -> Color(0xFF66BB6A) // Income category color
+        else -> Color.LightGray // Default category color
     }
 }
 
 @Composable
 fun BackToHomeButton(navController: NavHostController) {
-    Button(
+    IconButton(
         onClick = { navController.navigate(ROUTE_HOME) },
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            .height(56.dp)
+            .background(Color(0xFF1E88E5), shape = RoundedCornerShape(16.dp))
     ) {
-        Text(text = "Back to Home", color = Color.White, fontSize = 16.sp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.White)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Back to Home", color = Color.White)
+        }
     }
 }
 

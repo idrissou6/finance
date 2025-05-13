@@ -36,7 +36,6 @@ fun IncomeScreen(navController: NavHostController) {
     val db = Firebase.firestore
     val auth = Firebase.auth
     val user = auth.currentUser
-
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val currentDate = dateFormat.format(Date())
 
@@ -45,7 +44,7 @@ fun IncomeScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    listOf(Color(0xFFB2FEFA), Color(0xFF0ED2F7))
+                    listOf(Color(0xFF7F00FF), Color(0xFF00BFFF))
                 )
             )
             .padding(24.dp)
@@ -59,9 +58,7 @@ fun IncomeScreen(navController: NavHostController) {
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.size(80.dp)
             )
 
             Text(
@@ -77,8 +74,9 @@ fun IncomeScreen(navController: NavHostController) {
                 label = { Text("Income Source / Title") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black)
+                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                shape = RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
@@ -87,55 +85,64 @@ fun IncomeScreen(navController: NavHostController) {
                 label = { Text("Amount") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black)
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                shape = RoundedCornerShape(12.dp)
             )
 
             Button(
                 onClick = {
-                    if (name.isNotBlank() && amount.isNotBlank()) {
-                        if (user != null) {
-                            val income = hashMapOf(
-                                "name" to name,
-                                "amount" to amount,
-                                "category" to "Income",
-                                "date" to currentDate,
-                                "uid" to user.uid
-                            )
-
-                            db.collection("expenses")
-                                .add(income)
-                                .addOnSuccessListener {
-                                    Toast.makeText(context, "Income added successfully", Toast.LENGTH_SHORT).show()
-                                    navController.navigate(ROUTE_HOME)
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(context, "Failed to add income", Toast.LENGTH_SHORT).show()
-                                }
-                        } else {
-                            Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
+                    if (name.isBlank() || amount.isBlank()) {
                         Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    val parsedAmount = amount.toDoubleOrNull()
+                    if (parsedAmount == null || parsedAmount <= 0) {
+                        Toast.makeText(context, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    if (user != null) {
+                        val income = hashMapOf(
+                            "name" to name.trim(),
+                            "amount" to parsedAmount.toString(),
+                            "category" to "Income",
+                            "date" to currentDate,
+                            "uid" to user.uid
+                        )
+
+                        db.collection("income")
+                            .add(income)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "Income added successfully", Toast.LENGTH_SHORT).show()
+                                navController.navigate(ROUTE_HOME)
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(context, "Failed to add income", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
             ) {
                 Text("Save Income", fontSize = 16.sp, color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
             OutlinedButton(
                 onClick = { navController.navigate(ROUTE_HOME) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Text("Cancel")
+                Text("Cancel", fontSize = 16.sp)
             }
         }
     }

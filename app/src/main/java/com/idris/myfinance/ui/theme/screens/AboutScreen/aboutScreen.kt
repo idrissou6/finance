@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +29,7 @@ fun AboutScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(Color(0xFF6A82FB), Color(0xFFFC5C7D))
+                    colors = listOf(Color(0xFF6A82FB), Color(0xFFFC5C7D)) // Gradient background
                 )
             )
     ) {
@@ -62,8 +61,10 @@ fun AboutScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(8.dp, RoundedCornerShape(20.dp)) // Enhanced card shadow
+                    .clip(RoundedCornerShape(20.dp)), // Rounded corners for the card
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
             ) {
@@ -104,8 +105,9 @@ fun AboutScreen(navController: NavHostController) {
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .shadow(8.dp, RoundedCornerShape(12.dp)), // Button with rounded corners and shadow
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))
             ) {
                 Text(text = "Back to Home", color = Color.White, fontSize = 16.sp)

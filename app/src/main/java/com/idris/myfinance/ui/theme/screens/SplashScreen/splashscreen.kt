@@ -40,10 +40,10 @@ fun SplashScreen(navController: NavHostController) {
 
     LaunchedEffect(Unit) {
 
+        // Animating logo scale and visibility
         scale.animateTo(1f, animationSpec = tween(1000, easing = EaseOutBack))
         logoAlpha.animateTo(1f, animationSpec = tween(1000))
         progressAlpha.animateTo(1f, animationSpec = tween(1500))
-
 
         delay(2500)
         val user = FirebaseAuth.getInstance().currentUser
@@ -59,7 +59,7 @@ fun SplashScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF512DA8), Color(0xFF673AB7))
+                    colors = listOf(Color(0xFF6A1B9A), Color(0xFF9C27B0)) // Subtle gradient background
                 )
             )
     ) {
@@ -68,7 +68,6 @@ fun SplashScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
@@ -77,8 +76,8 @@ fun SplashScreen(navController: NavHostController) {
                     .scale(scale.value)
                     .alpha(logoAlpha.value)
             )
-            Spacer(modifier = Modifier.height(24.dp))
 
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "MyFinance",
@@ -87,14 +86,13 @@ fun SplashScreen(navController: NavHostController) {
                 color = Color.White
             )
 
-
             Text(
                 text = "Your Personal Finance Tracker",
                 fontSize = 16.sp,
                 color = Color.White.copy(alpha = 0.8f)
             )
-            Spacer(modifier = Modifier.height(40.dp))
 
+            Spacer(modifier = Modifier.height(40.dp))
 
             CircularProgressIndicator(
                 color = Color.White,

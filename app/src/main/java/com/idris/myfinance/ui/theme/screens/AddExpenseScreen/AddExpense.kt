@@ -51,10 +51,9 @@ fun AddExpenseScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFF512DA8), Color(0xFF673AB7))
-                )
+                Brush.verticalGradient(listOf(Color(0xFF7F00FF), Color(0xFF00BFFF)))
             )
+            .padding(20.dp)
     ) {
         Column(
             modifier = Modifier
@@ -67,9 +66,7 @@ fun AddExpenseScreen(navController: NavHostController) {
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.size(100.dp)
             )
 
             Text(
@@ -117,7 +114,6 @@ fun AddExpenseScreen(navController: NavHostController) {
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
-                            val calendar = Calendar.getInstance()
                             calendar.set(year, month, dayOfMonth)
                             date = dateFormatter.format(calendar.time)
                         },
@@ -162,7 +158,7 @@ fun AddExpenseScreen(navController: NavHostController) {
                     val db = Firebase.firestore
                     val expense = hashMapOf(
                         "name" to name.trim(),
-                        "amount" to amount.trim(),
+                        "amount" to parsedAmount.toString(),
                         "category" to selectedCategory,
                         "date" to date,
                         "uid" to uid
@@ -187,10 +183,7 @@ fun AddExpenseScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(12.dp)
             ) {
                 if (isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
                     Text("Save Expense", fontSize = 18.sp)
                 }

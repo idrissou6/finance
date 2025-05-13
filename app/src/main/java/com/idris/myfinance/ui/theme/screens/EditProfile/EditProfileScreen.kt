@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,7 +71,7 @@ fun EditProfileScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE3F2FD))
+            .background(Color(0xFFF5F5F5))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -86,7 +87,8 @@ fun EditProfileScreen(navController: NavHostController) {
         Text(
             text = "Edit Profile",
             fontSize = 28.sp,
-            color = Color(0xFF212121)
+            color = Color(0xFF212121), // Dark color for better visibility
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(24.dp))
