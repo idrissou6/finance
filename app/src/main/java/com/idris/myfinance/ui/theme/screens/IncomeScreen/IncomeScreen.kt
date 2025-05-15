@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -42,11 +41,7 @@ fun IncomeScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    listOf(Color(0xFF7F00FF), Color(0xFF00BFFF))
-                )
-            )
+            .background(Color.Black)
             .padding(24.dp)
     ) {
         Column(
@@ -71,24 +66,32 @@ fun IncomeScreen(navController: NavHostController) {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Income Source / Title") },
+                label = { Text("Income Source / Title", color = Color.LightGray) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
-                shape = RoundedCornerShape(12.dp)
+                    .background(Color.DarkGray, shape = RoundedCornerShape(12.dp)),
+                textStyle = LocalTextStyle.current.copy(color = Color.White),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.LightGray
+                )
             )
 
             OutlinedTextField(
                 value = amount,
                 onValueChange = { amount = it },
-                label = { Text("Amount") },
+                label = { Text("Amount", color = Color.LightGray) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                    .background(Color.DarkGray, shape = RoundedCornerShape(12.dp)),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
-                shape = RoundedCornerShape(12.dp)
+                textStyle = LocalTextStyle.current.copy(color = Color.White),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Cyan,
+                    unfocusedBorderColor = Color.LightGray
+                )
             )
 
             Button(
@@ -140,7 +143,8 @@ fun IncomeScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
             ) {
                 Text("Cancel", fontSize = 16.sp)
             }

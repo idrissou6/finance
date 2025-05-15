@@ -3,13 +3,10 @@ package com.idris.MyFinance.ui.theme.screens.SplashScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.EaseOutBack
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -17,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -39,8 +37,6 @@ fun SplashScreen(navController: NavHostController) {
     val progressAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-
-        // Animating logo scale and visibility
         scale.animateTo(1f, animationSpec = tween(1000, easing = EaseOutBack))
         logoAlpha.animateTo(1f, animationSpec = tween(1000))
         progressAlpha.animateTo(1f, animationSpec = tween(1500))
@@ -54,14 +50,26 @@ fun SplashScreen(navController: NavHostController) {
         }
     }
 
+    val shimmerTransition = rememberInfiniteTransition()
+    val shimmerX by shimmerTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(4000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val shimmerBrush = Brush.linearGradient(
+        colors = listOf(Color(0xFF0D47A1), Color(0xFF1976D2), Color(0xFF42A5F5)),
+        start = Offset(shimmerX, 0f),
+        end = Offset(shimmerX - 800f, 1000f)
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFF6A1B9A), Color(0xFF9C27B0)) // Subtle gradient background
-                )
-            )
+            .background(brush = shimmerBrush)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -89,7 +97,7 @@ fun SplashScreen(navController: NavHostController) {
             Text(
                 text = "Your Personal Finance Tracker",
                 fontSize = 16.sp,
-                color = Color.White.copy(alpha = 0.8f)
+                color = Color.White.copy(alpha = 0.85f)
             )
 
             Spacer(modifier = Modifier.height(40.dp))

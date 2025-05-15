@@ -29,7 +29,7 @@ fun AboutScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(Color(0xFF6A82FB), Color(0xFFFC5C7D)) // Gradient background
+                    colors = listOf(Color(0xFF283593), Color(0xFF6A1B9A)) // Deep, premium gradient
                 )
             )
     ) {
@@ -40,36 +40,39 @@ fun AboutScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
+
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .size(120.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .shadow(8.dp, RoundedCornerShape(12.dp))
-                    .padding(top = 16.dp, bottom = 16.dp)
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .shadow(8.dp, RoundedCornerShape(20.dp))
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "About MyFinance",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.ExtraBold,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(20.dp)) // Enhanced card shadow
-                    .clip(RoundedCornerShape(20.dp)), // Rounded corners for the card
+                    .shadow(12.dp, RoundedCornerShape(24.dp))
+                    .clip(RoundedCornerShape(24.dp)),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
@@ -77,40 +80,49 @@ fun AboutScreen(navController: NavHostController) {
                         contentDescription = "Illustration",
                         modifier = Modifier
                             .fillMaxWidth(0.7f)
-                            .height(180.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .shadow(8.dp, RoundedCornerShape(12.dp))
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "MyFinance helps you track expenses, manage budgets, and understand your financial habits with ease.",
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFF616161)
+                            .height(160.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .shadow(6.dp, RoundedCornerShape(16.dp))
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text("Developed by: Idris Abdi Derow", fontSize = 16.sp, color = Color(0xFF616161))
-                    Text("Email: idris@MyFinance.com", fontSize = 16.sp, color = Color(0xFF616161))
-                    Text("Phone: +254 741 879051", fontSize = 16.sp, color = Color(0xFF616161))
+                    Text(
+                        text = "MyFinance helps you effortlessly track expenses, set budgets, and stay in control of your financial goals.",
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        color = Color(0xFF424242),
+                        lineHeight = 22.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Divider(color = Color(0xFFEEEEEE), thickness = 1.dp)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text("Developed by", fontSize = 14.sp, color = Color.Gray)
+                    Text("Idris Abdi Derow", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1E88E5))
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text("Email: idris@MyFinance.com", fontSize = 14.sp, color = Color(0xFF616161))
+                    Text("Phone: +254 741 879051", fontSize = 14.sp, color = Color(0xFF616161))
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             Button(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .shadow(8.dp, RoundedCornerShape(12.dp)), // Button with rounded corners and shadow
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))
+                    .height(52.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .shadow(10.dp, RoundedCornerShape(14.dp)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0))
             ) {
-                Text(text = "Back to Home", color = Color.White, fontSize = 16.sp)
+                Text("Back to Home", fontSize = 16.sp, color = Color.White)
             }
         }
     }

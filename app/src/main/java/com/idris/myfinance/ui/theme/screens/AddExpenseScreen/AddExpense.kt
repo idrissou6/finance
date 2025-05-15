@@ -7,15 +7,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,46 +49,59 @@ fun AddExpenseScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(listOf(Color(0xFF7F00FF), Color(0xFF00BFFF)))
-            )
-            .padding(20.dp)
+            .background(Color.Black)
+            .padding(24.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.size(80.dp)
             )
 
             Text(
                 text = "Add New Expense",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontSize = 26.sp,
-                    color = Color.White
-                )
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Expense Name") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                shape = RoundedCornerShape(12.dp)
+            )
 
-            TextFieldDefault("Expense Name", name) { name = it }
-            Spacer(modifier = Modifier.height(12.dp))
-
-            TextFieldDefault("Amount", amount) { amount = it }
-            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                value = amount,
+                onValueChange = { amount = it },
+                label = { Text("Amount") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                shape = RoundedCornerShape(12.dp)
+            )
 
             Button(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.fillMaxWidth()
+                onClick = { expanded = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
             ) {
-                Text(selectedCategory.ifEmpty { "Select Category" })
+                Text(selectedCategory.ifEmpty { "Select Category" }, color = Color.White)
             }
 
             DropdownMenu(
@@ -107,8 +119,6 @@ fun AddExpenseScreen(navController: NavHostController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             Button(
                 onClick = {
                     DatePickerDialog(
@@ -122,20 +132,17 @@ fun AddExpenseScreen(navController: NavHostController) {
                         calendar.get(Calendar.DAY_OF_MONTH)
                     ).show()
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
             ) {
-                Text(if (date.isEmpty()) "Select Date" else date)
+                Text(if (date.isEmpty()) "Select Date" else date, color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
             if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = errorMessage, color = Color.Red)
             }
 
             Button(
@@ -167,42 +174,39 @@ fun AddExpenseScreen(navController: NavHostController) {
                     db.collection("expenses")
                         .add(expense)
                         .addOnSuccessListener {
-                            Log.d("Firestore", "Expense added successfully")
+                            Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
                             navController.navigate(ROUTE_EXPENSE_LIST)
                             isLoading = false
                         }
-                        .addOnFailureListener { e ->
-                            Log.w("Firestore", "Error adding document", e)
-                            Toast.makeText(context, "Error saving expense", Toast.LENGTH_SHORT).show()
+                        .addOnFailureListener {
+                            Toast.makeText(context, "Failed to add expense", Toast.LENGTH_SHORT).show()
                             isLoading = false
                         }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp),
-                shape = RoundedCornerShape(12.dp)
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Text("Save Expense", fontSize = 18.sp)
+                    Text("Save Expense", fontSize = 16.sp, color = Color.White)
                 }
+            }
+
+            OutlinedButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("Cancel", fontSize = 16.sp)
             }
         }
     }
-}
-
-@Composable
-fun TextFieldDefault(label: String, value: String, onValueChange: (String) -> Unit) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(8.dp)),
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
-    )
 }
 
 @Preview(showBackground = true)
